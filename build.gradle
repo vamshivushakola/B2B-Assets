@@ -1,0 +1,110 @@
+def config = {
+	localProperties {
+		property 'recaptcha.publickey', ''
+		property 'recaptcha.privatekey', ''
+		property 'googleApiKey', ''
+		property 'db.url', 'jdbc:mysql://localhost/b2bassets6'
+		property 'db.driver', 'com.mysql.jdbc.Driver'
+		property 'db.username', 'root'
+		property 'db.password', 'password'
+		property 'b2bassetsstorefront.additionalWebSpringConfigs.b2bacceleratoraddon',  'classpath:/b2bacceleratoraddon/web/spring/b2bacceleratoraddon-web-spring.xml,classpath:/b2bacceleratoraddon/web/spring/multi-step-checkout-config.xml,classpath:/b2bacceleratoraddon/web/spring/b2bacceleratoraddon-spring-security-config.xml'
+		property 'b2bassetsstorefront.additionalWebSpringConfigs.assistedservicestorefront', 'classpath:/assistedservicestorefront/web/spring/assistedservicestorefront-web-spring.xml'
+		property 'b2bassetsstorefront.additionalWebSpringConfigs.commerceorgaddon',
+      'classpath:/commerceorgaddon/web/spring/commerceorgaddon-web-spring.xml,classpath:/commerceorgaddon/web/spring/commerceorgaddon-spring-security-config.xml'
+	    property 'b2bassetsstorefront.additionalWebSpringConfigs.secureportaladdon','classpath:/secureportaladdon/web/spring/secureportaladdon-web-spring.xml'
+	    property 'b2bassetsstorefront.additionalWebSpringConfigs.accountsummaryaddon','classpath:/accountsummaryaddon/web/spring/accountsummaryaddon-web-spring.xml'
+	  	  
+		property 'website.powertools.http', 'http://powertools.local:9001/b2bassetsstorefront'
+		property 'website.powertools.https', 'https://powertools.local:9002/b2bassetsstorefront'
+		
+		property 'tomcat.generaloptions', '-Xmx6G -XX:MaxPermSize=1024M -ea -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dorg.tanukisoftware.wrapper.WrapperManager.mbean=true -Djava.endorsed.dirs="%CATALINA_HOME%/lib/endorsed" -Dcatalina.base=%CATALINA_BASE% -Dcatalina.home=%CATALINA_HOME% -Dfile.encoding=UTF-8 -Dlog4j.configuration=log4j_init_tomcat.properties -Djava.util.logging.config.file=jdk_logging.properties -Djava.io.tmpdir="${HYBRIS_TEMP_DIR}"'
+		property 'build.parallel', 'true'
+		
+		
+		property 'pagination.type', 'pagination'
+    }
+
+    extensions {
+        extName 'mcc'
+  	    extName 'backoffice'
+  	    extName 'commercesearchbackoffice'
+        extName 'b2bcommercebackoffice'
+        extName 'commerceservicesbackoffice'
+  		extName 'solrfacetsearchbackoffice'
+        extName 'b2badmincockpit'
+
+		extName 'btgcockpit'
+
+ 		extName 'yaddon'
+		extName 'ycommercewebservices'
+
+		
+        extName 'solrserver'
+
+		extName 'acceleratorwebservicesaddon'
+        extName 'b2bacceleratoraddon'
+        extName 'commerceorgaddon'
+		extName 'b2bpunchoutaddon'
+        extName 'secureportaladdon'
+        extName 'savedorderformsoccaddon'
+        extName 'b2boccaddon'
+        extName 'accountsummaryaddon'
+        extName 'assistedservicestorefront'
+        extName 'captchaaddon'
+		
+		extName 'customerticketingaddon'
+		extName 'customersupportbackoffice'
+		
+		extName 'b2bassetscore'
+		extName 'b2bassetsfacades'
+		extName 'b2bassetsstorefront'
+		extName 'b2bassetsfulfilmentprocess'
+		extName 'b2bassetsinitialdata'
+		extName 'b2bassetscockpits'
+		extName 'b2bassetstest'
+		
+		extName 'hotfolder'
+		extName 'interfaceerror'
+		extName 'solrsearchrestriction'
+		extName 'quickorder'
+		extName 'productsearch'
+		extName 'singlevieworders'
+		extName 'ordersearch'
+		
+    }
+}
+
+task setup << {
+    apply plugin: 'installer-platform-plugin'
+    apply plugin: 'installer-addon-plugin'
+    def pl = platform(config)
+    pl.setup()
+
+	pl.project.addons {
+        names "b2bacceleratoraddon,commerceorgaddon,b2bpunchoutaddon,secureportaladdon,accountsummaryaddon,assistedservicestorefront,captchaaddon,customerticketingaddon,quickorder,productsearch,singlevieworders,ordersearch"
+        template "b2bassetsstorefront"
+        storeFronts "b2bassetsstorefront"
+        platform pl
+    }
+
+    pl.project.addons {
+        names "acceleratorwebservicesaddon,b2boccaddon,savedorderformsoccaddon"
+        template "ycommercewebservices"
+        storeFronts "ycommercewebservices"
+        platform pl
+    }
+}
+
+task initialize << {
+    apply plugin: 'installer-platform-plugin'
+    def pl = platform(config)
+    pl.build()
+    pl.initialize()
+}
+
+
+task start << {
+    apply plugin: 'installer-platform-plugin'
+    def pl = platform(config)
+    pl.start()
+}

@@ -1,0 +1,12 @@
+#UTF-8: √Ø¬ø¬Ω√Ø¬ø¬Ω√Ø¬ø¬Ω
+# Localization de
+ 
+# Macros / Replacement Parameter definitions
+$productCatalog=powertoolsProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+# Language
+$lang=de
+
+UPDATE Product;code[unique=true];$catalogVersion;name[lang=$lang];description[lang=$lang];summary[lang=$lang]
+ 

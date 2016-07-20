@@ -1,0 +1,16 @@
+#PRODUCTS
+
+# Macros / Replacement Parameter definitions
+$productCatalog=powertoolsProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$supercategories=supercategories(code, $catalogVersion)
+$baseProduct=baseProduct(code,$catalogVersion)
+$approved=approvalstatus(code)[default='approved']
+
+# Language
+$lang=en
+
+# Insert Variant Category
+INSERT_UPDATE VariantCategory      ; code[unique=true] ; name       ; $supercategories ; hasImage ; $catalogVersion ; allowedPrincipals(uid)[default='customergroup']
+
+                                    
